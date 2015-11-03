@@ -1,530 +1,582 @@
 [
   {
-    "category": "Network",
+    "meta": "POSINT",
     "description": "The TCP port TSD should use for communications",
     "optional": "false",
-    "value": "${tsd.network.port:4242}",
+    "category": "Network",
     "type": "Integer",
-    "key": "tsd.network.port"
+    "value": "${tsd.network.port:4242}",
+    "key": "tsd.network.port",
+    "cl": "--port"
   },
   {
-    "category": "Network",
+    "meta": "ADDR",
     "description": "The IPv4 network address to bind to, defaults to all addresses",
     "optional": "true",
-    "value": "${tsd.network.bind:0.0.0.0}",
+    "category": "Network",
     "type": "String",
-    "key": "tsd.network.bind"
+    "value": "${tsd.network.bind:0.0.0.0}",
+    "key": "tsd.network.bind",
+    "cl": "--bind"
   },
   {
-    "category": "Network",
+    "meta": "BOOL",
     "description": "Enables Nagel's algorithm to reduce the number of packets sent over the network, default is True",
     "optional": "true",
-    "value": "${tsd.network.tcpnodelay:true}",
+    "category": "Network",
     "type": "Boolean",
+    "value": "${tsd.network.tcpnodelay:true}",
     "key": "tsd.network.tcp_no_delay"
   },
   {
-    "category": "Network",
+    "meta": "BOOL",
     "description": "Determines whether or not to send keepalive packets to peers, default is True",
     "optional": "true",
-    "value": "${tsd.network.keepalive:true}",
+    "category": "Network",
     "type": "Boolean",
+    "value": "${tsd.network.keepalive:true}",
     "key": "tsd.network.keep_alive"
   },
   {
-    "category": "Network",
+    "meta": "BOOL",
     "description": "Determines if the same socket should be used for new connections, default is True",
     "optional": "true",
-    "value": "${tsd.network.reuseaddress:true}",
+    "category": "Network",
     "type": "Boolean",
+    "value": "${tsd.network.reuseaddress:true}",
     "key": "tsd.network.reuse_address"
   },
   {
-    "category": "Network",
+    "meta": "GTZEROINT",
     "description": "Number of worker threads dedicated to Netty, defaults to # of CPUs * 2",
     "optional": "true",
-    "value": "${tsd.network.worker_threads:js{new java.lang.Double(java.lang.management.ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors() * 2).intValue()}}",
+    "category": "Network",
     "type": "Integer",
-    "key": "tsd.network.worker_threads"
+    "value": "${tsd.network.worker_threads:js{new java.lang.Double(java.lang.management.ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors() * 2).intValue()}}",
+    "key": "tsd.network.worker_threads",
+    "cl": "--worker-threads"
   },
   {
-    "category": "Network",
+    "meta": "BOOL",
     "description": "Whether or not to use NIO or tradditional blocking IO, defaults to True",
     "optional": "true",
-    "value": "${tsd.network.async_io:true}",
+    "category": "Network",
     "type": "Boolean",
-    "key": "tsd.network.async_io"
+    "value": "${tsd.network.async_io:true}",
+    "key": "tsd.network.async_io",
+    "cl": "--async-io"
   },
   {
-    "category": "Network",
+    "meta": "GTZEROINT",
     "description": "The connection queue depth for completed or incomplete connection requests depending on OS. The default may be limited by the 'somaxconn' kernel setting or set by Netty to 3072.",
     "optional": "true",
-    "value": "${tsd.network.backlog:3027}",
+    "category": "Network",
     "type": "Integer",
-    "key": "tsd.network.backlog"
+    "value": "${tsd.network.backlog:3027}",
+    "key": "tsd.network.backlog",
+    "cl": "--backlog"
   },
   {
-    "category": "HTTP",
+    "meta": "DIR",
     "description": "The location of static files for the HTTP GUI interface.",
     "optional": "false",
-    "value": "${tsd.http.staticroot:${capsule.cache.dir}/uiroot}",
+    "category": "HTTP",
     "type": "String",
-    "key": "tsd.http.staticroot"
+    "value": "${tsd.http.staticroot:${capsule.cache.dir}/uiroot}",
+    "key": "tsd.http.staticroot",
+    "cl": "--staticroot"
   },
   {
-    "category": "HTTP",
+    "meta": "DIR",
     "description": "Where TSD should write it's cache files to",
     "optional": "false",
-    "value": "${tsd.http.cachedir:${capsule.cache.dir}/cache}",
+    "category": "HTTP",
     "type": "String",
-    "key": "tsd.http.cachedir"
+    "value": "${tsd.http.cachedir:${capsule.cache.dir}/cache}",
+    "key": "tsd.http.cachedir",
+    "cl": "--cachedir"
   },
   {
-    "category": "HTTP",
     "description": "Whether or not to allow deleting data points from storage during query time.",
     "optional": "true",
-    "value": "${tsd.http.query.allow_delete:false}",
+    "category": "HTTP",
     "type": "Boolean",
+    "value": "${tsd.http.query.allow_delete:false}",
     "key": "tsd.http.query.allow_delete"
   },
   {
-    "category": "HTTP",
+    "meta": "LIST",
     "description": "A comma separated list of domain names to allow access to OpenTSDB when the header is specified by the client. If empty, CORS requests are passed through without validation. The list may not contain the public wildcard and specific domains at the same time.",
     "optional": "true",
-    "value": "${tsd.http.request.cors_domains:*}",
+    "category": "HTTP",
     "type": "String",
+    "value": "${tsd.http.request.cors_domains:*}",
     "key": "tsd.http.request.cors_domains"
   },
   {
-    "category": "HTTP",
+    "meta": "LIST",
     "description": "A comma separated list of headers sent to clients when executing a CORs request. The literal value of this option will be passed to clients.",
     "optional": "true",
-    "value": "${tsd.http.request.cors_headers:Authorization, Content-Type, Accept, Origin, User-Agent, DNT, Cache-Control, X-Mx-ReqToken, Keep-Alive, X-Requested-With, If-Modified-Since}",
+    "category": "HTTP",
     "type": "String",
+    "value": "${tsd.http.request.cors_headers:Authorization, Content-Type, Accept, Origin, User-Agent, DNT, Cache-Control, X-Mx-ReqToken, Keep-Alive, X-Requested-With, If-Modified-Since}",
     "key": "tsd.http.request.cors_headers"
   },
   {
-    "category": "HTTP",
+    "meta": "BOOL",
     "description": "Whether or not to enable incoming chunk support for the HTTP RPC",
     "optional": "true",
-    "value": "${tsd.http.request.enable_chunked:false}",
+    "category": "HTTP",
     "type": "Boolean",
+    "value": "${tsd.http.request.enable_chunked:false}",
     "key": "tsd.http.request.enable_chunked"
   },
   {
-    "category": "HTTP",
+    "meta": "GTZEROINT",
     "description": "The maximum request body size to support for incoming HTTP requests when chunking is enabled.",
     "optional": "true",
-    "value": "${tsd.http.request.max_chunk:4096}",
+    "category": "HTTP",
     "type": "Integer",
+    "value": "${tsd.http.request.max_chunk:4096}",
     "key": "tsd.http.request.max_chunk"
   },
   {
-    "category": "HTTP",
     "description": "A comma delimited list of RPC plugins to load when starting a TSD. Must contain the entire class name.",
     "optional": "true",
-    "value": "${tsd.http.rpc.plugins:}",
+    "category": "HTTP",
     "type": "String",
+    "value": "${tsd.http.rpc.plugins:}",
     "key": "tsd.http.rpc.plugins"
   },
   {
-    "category": "HTTP",
+    "meta": "BOOL",
     "description": "Whether or not to return the stack trace with an API query response when an exception occurs.",
     "optional": "true",
-    "value": "${tsd.http.show_stack_trace:false}",
+    "category": "HTTP",
     "type": "Boolean",
+    "value": "${tsd.http.show_stack_trace:false}",
     "key": "tsd.http.show_stack_trace"
   },
   {
-    "category": "Core",
+    "meta": "BOOL",
     "description": "Whether or not to automatically create UIDs for new metric types, default is True",
     "optional": "true",
-    "value": "${tsd.core.auto_create_metrics:true}",
+    "category": "Core",
     "type": "Boolean",
+    "value": "${tsd.core.auto_create_metrics:true}",
     "key": "tsd.core.auto_create_metrics"
   },
   {
-    "category": "Core",
+    "meta": "BOOL",
     "description": "Whether or not a data point with a new tag name will assign a UID to the tagk. When false, a data point with a tag name that is not in the database will be rejected and an exception will be thrown.",
     "optional": "true",
-    "value": "${tsd.core.auto_create_tagks:true}",
+    "category": "Core",
     "type": "Boolean",
+    "value": "${tsd.core.auto_create_tagks:true}",
     "key": "tsd.core.auto_create_tagks"
   },
   {
-    "category": "Core",
+    "meta": "BOOL",
     "description": "Whether or not a data point with a new tag value will assign a UID to the tagv. When false, a data point with a tag value that is not in the database will be rejected and an exception will be thrown.",
     "optional": "true",
-    "value": "${tsd.core.auto_create_tagvs:true}",
+    "category": "Core",
     "type": "Boolean",
+    "value": "${tsd.core.auto_create_tagvs:true}",
     "key": "tsd.core.auto_create_tagvs"
   },
   {
-    "category": "Core",
+    "meta": "BOOL",
     "description": "Whether or not to enable real-time TSMeta object creation. See",
     "optional": "true",
-    "value": "${tsd.core.meta.enable_realtime_ts:false}",
+    "category": "Core",
     "type": "Boolean",
+    "value": "${tsd.core.meta.enable_realtime_ts:false}",
     "key": "tsd.core.meta.enable_realtime_ts"
   },
   {
-    "category": "Core",
+    "meta": "BOOL",
     "description": "Whether or not to enable real-time UIDMeta object creation. See",
     "optional": "true",
-    "value": "${tsd.core.meta.enable_realtime_uid:false}",
+    "category": "Core",
     "type": "Boolean",
+    "value": "${tsd.core.meta.enable_realtime_uid:false}",
     "key": "tsd.core.meta.enable_realtime_uid"
   },
   {
-    "category": "Core",
+    "meta": "BOOL",
     "description": "Whether or not to enable tracking of TSUIDs by incrementing a counter every time a data point is recorded. See (Overrides \"tsd.core.meta.enable_tsuid_tracking\")",
     "optional": "true",
-    "value": "${tsd.core.meta.enable_tsuid_incrementing:false}",
+    "category": "Core",
     "type": "Boolean",
+    "value": "${tsd.core.meta.enable_tsuid_incrementing:false}",
     "key": "tsd.core.meta.enable_tsuid_incrementing"
   },
   {
-    "category": "Core",
+    "meta": "BOOL",
     "description": "Whether or not to enable tracking of TSUIDs by storing a with the current timestamp every time a data point is recorded. See",
     "optional": "true",
-    "value": "${tsd.core.meta.enable_tsuid_tracking:false}",
+    "category": "Core",
     "type": "Boolean",
+    "value": "${tsd.core.meta.enable_tsuid_tracking:false}",
     "key": "tsd.core.meta.enable_tsuid_tracking"
   },
   {
-    "category": "Core",
+    "meta": "DIR",
     "description": "A path to search for plugins when the TSD starts. If the path is invalid, the TSD will fail to start. Plugins can still be enabled if they are in the class path.",
     "optional": "true",
-    "value": "${tsd.core.plugin_path:${capsule.cache.dir}/plugins}",
+    "category": "Core",
     "type": "String",
+    "value": "${tsd.core.plugin_path:${capsule.cache.dir}/plugins}",
     "key": "tsd.core.plugin_path"
   },
   {
-    "category": "Core",
+    "meta": "BOOL",
     "description": "Enables pre-population of the UID caches when starting a TSD.",
     "optional": "true",
-    "value": "${tsd.core.preload_uid_cache:false}",
+    "category": "Core",
     "type": "Boolean",
+    "value": "${tsd.core.preload_uid_cache:false}",
     "key": "tsd.core.preload_uid_cache"
   },
   {
-    "category": "Core",
+    "meta": "POSINT",
     "description": "The number of rows to scan for UID pre-loading.",
     "optional": "true",
-    "value": "${tsd.core.preload_uid_cache.max_entries:300000}",
+    "category": "Core",
     "type": "Integer",
+    "value": "${tsd.core.preload_uid_cache.max_entries:300000}",
     "key": "tsd.core.preload_uid_cache.max_entries"
   },
   {
-    "category": "Core",
     "description": "Whether or not to enable the configured storage exception handler plugin.",
     "optional": "true",
-    "value": "${tsd.core.storage_exception_handler.enable:false}",
+    "category": "Core",
     "type": "Boolean",
+    "value": "${tsd.core.storage_exception_handler.enable:false}",
     "key": "tsd.core.storage_exception_handler.enable"
   },
   {
-    "category": "Core",
     "description": "The full class name of the storage exception handler plugin you wish to use.",
     "optional": "true",
-    "value": "${tsd.core.storage_exception_handler.plugin:}",
+    "category": "Core",
     "type": "String",
+    "value": "${tsd.core.storage_exception_handler.plugin:}",
     "key": "tsd.core.storage_exception_handler.plugin"
   },
   {
-    "category": "Core",
+    "meta": "TIMEZONE",
     "description": "A localized timezone identification string used to override the local system timezone used when converting absolute times to UTC when executing a query. This does not affect incoming data timestamps. E.g. America/Los_Angeles",
     "optional": "true",
-    "value": "${tsd.core.timezone:${user.timezone}}",
+    "category": "Core",
     "type": "String",
+    "value": "${tsd.core.timezone:${user.timezone}}",
     "key": "tsd.core.timezone"
   },
   {
-    "category": "Core",
+    "meta": "BOOL",
     "description": "Whether or not to enable processing new/edited TSMeta through tree rule sets",
     "optional": "true",
-    "value": "${tsd.core.tree.enable_processing:false}",
+    "category": "Core",
     "type": "Boolean",
+    "value": "${tsd.core.tree.enable_processing:false}",
     "key": "tsd.core.tree.enable_processing"
   },
   {
-    "category": "Core",
     "description": "Whether or not to randomly assign UIDs to new metrics as they are created",
     "optional": "true",
-    "value": "${tsd.core.uid.random_metrics:false}",
+    "category": "Core",
     "type": "Boolean",
+    "value": "${tsd.core.uid.random_metrics:false}",
     "key": "tsd.core.uid.random_metrics"
   },
   {
-    "category": "Storage",
+    "meta": "BOOL",
     "description": "Whether or not to enable data compaction in HBase, default is True",
     "optional": "true",
-    "value": "${tsd.storage.enable_compaction:true}",
+    "category": "Storage",
     "type": "Boolean",
+    "value": "${tsd.storage.enable_compaction:true}",
     "key": "tsd.storage.enable_compaction"
   },
   {
-    "category": "Storage",
+    "meta": "GTZEROINT",
     "description": "How often, in milliseconds, to flush the data point queue to storage. Default is 1000",
     "optional": "true",
-    "value": "${tsd.storage.flush_interval:1000}",
+    "category": "Storage",
     "type": "Integer",
-    "key": "tsd.storage.flush_interval"
+    "value": "${tsd.storage.flush_interval:1000}",
+    "key": "tsd.storage.flush_interval",
+    "cl": "--flush-interval"
   },
   {
-    "category": "Storage",
+    "meta": "TABLE",
     "description": "Name of the HBase table where data points are stored, default is \"tsdb\"",
     "optional": "true",
-    "value": "${tsd.storage.hbase.data_table:tsdb}",
+    "category": "Storage",
     "type": "String",
+    "value": "${tsd.storage.hbase.data_table:tsdb}",
     "key": "tsd.storage.hbase.data_table"
   },
   {
-    "category": "Storage",
+    "meta": "TABLE",
     "description": "Name of the HBase table where UID information is stored, default is \"tsdb-uid\"",
     "optional": "true",
-    "value": "${tsd.storage.hbase.uid_table:tsdb-uid}",
+    "category": "Storage",
     "type": "String",
+    "value": "${tsd.storage.hbase.uid_table:tsdb-uid}",
     "key": "tsd.storage.hbase.uid_table"
   },
   {
-    "category": "Storage",
+    "meta": "ZPATH",
     "description": "Path under which the znode for the -ROOT- region is located, default is \"/hbase\"",
     "optional": "true",
-    "value": "${tsd.storage.hbase.zk_basedir:/hbase}",
+    "category": "Storage",
     "type": "String",
+    "value": "${tsd.storage.hbase.zk_basedir:/hbase}",
     "key": "tsd.storage.hbase.zk_basedir"
   },
   {
-    "category": "Storage",
+    "meta": "SPEC",
     "description": "A comma separated list of Zookeeper hosts to connect to, with or without port specifiers, default is \"localhost\"",
     "optional": "true",
-    "value": "${tsd.storage.hbase.zk_quorum:localhost}",
+    "category": "Storage",
     "type": "String",
+    "value": "${tsd.storage.hbase.zk_quorum:localhost}",
     "key": "tsd.storage.hbase.zk_quorum"
   },
   {
-    "category": "Storage",
     "description": "Whether or not to append data to columns when writing data points instead of creating new columns for each value. Avoids the need for compactions after each hour but can use more resources on HBase.",
     "optional": "true",
-    "value": "${tsd.storage.enable_appends:false}",
+    "category": "Storage",
     "type": "Boolean",
+    "value": "${tsd.storage.enable_appends:false}",
     "key": "tsd.storage.enable_appends"
   },
   {
-    "category": "Storage",
+    "meta": "BOOL",
     "description": "Whether or not to accept the last written value when parsing data points with duplicate timestamps. When enabled in conjunction with compactions, a compacted column will be written with the latest data points.",
     "optional": "true",
-    "value": "${tsd.storage.fix_duplicates:false}",
+    "category": "Storage",
     "type": "Boolean",
+    "value": "${tsd.storage.fix_duplicates:false}",
     "key": "tsd.storage.fix_duplicates"
   },
   {
-    "category": "Storage",
+    "meta": "TABLE",
     "description": "Name of the HBase table where meta data are stored",
     "optional": "true",
-    "value": "${tsd.storage.hbase.meta_table:tsdb-meta}",
+    "category": "Storage",
     "type": "String",
+    "value": "${tsd.storage.hbase.meta_table:tsdb-meta}",
     "key": "tsd.storage.hbase.meta_table"
   },
   {
-    "category": "Storage",
     "description": "Whether or not to prefetch the regions for the TSDB tables before starting the network interface. This can improve performance.",
     "optional": "true",
-    "value": "${tsd.storage.hbase.prefetch_meta:false}",
+    "category": "Storage",
     "type": "Boolean",
+    "value": "${tsd.storage.hbase.prefetch_meta:false}",
     "key": "tsd.storage.hbase.prefetch_meta"
   },
   {
-    "category": "Storage",
+    "meta": "TABLE",
     "description": "Name of the HBase table where tree data are stored",
     "optional": "true",
-    "value": "${tsd.storage.hbase.tree_table:tsdb-tree}",
+    "category": "Storage",
     "type": "String",
+    "value": "${tsd.storage.hbase.tree_table:tsdb-tree}",
     "key": "tsd.storage.hbase.tree_table"
   },
   {
-    "category": "Storage",
     "description": "Whether or not to re-write appended data point columns at query time when the columns contain duplicate or out of order data.",
     "optional": "true",
-    "value": "${tsd.storage.repair_appends:false}",
+    "category": "Storage",
     "type": "Boolean",
+    "value": "${tsd.storage.repair_appends:false}",
     "key": "tsd.storage.repair_appends"
   },
   {
-    "category": "Storage",
     "description": "The maximum number of tags allowed per data point. Please be aware of the performance tradeoffs of overusing tags",
     "optional": "true",
-    "value": "${tsd.storage.max_tags:8}",
+    "category": "Storage",
     "type": "Integer",
+    "value": "${tsd.storage.max_tags:8}",
     "key": "tsd.storage.max_tags"
   },
   {
-    "category": "Storage",
     "description": "The number of salt buckets used to distribute load across regions. Changing this value after writing data may cause TSUID based queries to fail.",
     "optional": "true",
-    "value": "${tsd.storage.salt.buckets:20}",
+    "category": "Storage",
     "type": "Integer",
+    "value": "${tsd.storage.salt.buckets:20}",
     "key": "tsd.storage.salt.buckets"
   },
   {
-    "category": "Storage",
     "description": "The width, in bytes, of the salt prefix used to indicate which bucket a time series belongs in. A value of 0 means salting is disabled. Do not change after writing data to HBase or you will corrupt your tables and not be able to query any more.",
     "optional": "true",
-    "value": "${tsd.storage.salt.width:0}",
+    "category": "Storage",
     "type": "Integer",
+    "value": "${tsd.storage.salt.width:0}",
     "key": "tsd.storage.salt.width"
   },
   {
-    "category": "Storage",
     "description": "The width, in bytes, of metric UIDs. Do not change after writing data to HBase or you will corrupt your tables and not be able to query any more.",
     "optional": "true",
-    "value": "${tsd.storage.uid.width.metric:3}",
+    "category": "Storage",
     "type": "Integer",
+    "value": "${tsd.storage.uid.width.metric:3}",
     "key": "tsd.storage.uid.width.metric"
   },
   {
-    "category": "Storage",
     "description": "The width, in bytes, of tag name UIDs. Do not change after writing data to HBase or you will corrupt your tables and not be able to query any more.",
     "optional": "true",
-    "value": "${tsd.storage.uid.width.tagk:3}",
+    "category": "Storage",
     "type": "Integer",
+    "value": "${tsd.storage.uid.width.tagk:3}",
     "key": "tsd.storage.uid.width.tagk"
   },
   {
-    "category": "Storage",
     "description": "The width, in bytes, of tag value UIDs. Do not change after writing data to HBase or you will corrupt your tables and not be able to query any more.",
     "optional": "true",
-    "value": "${tsd.storage.uid.width.tagv:3}",
+    "category": "Storage",
     "type": "Integer",
+    "value": "${tsd.storage.uid.width.tagv:3}",
     "key": "tsd.storage.uid.width.tagv"
   },
   {
-    "category": "Compactions",
     "description": "Frequency at which compaction thread wakes up to flush stuff in seconds, default 10",
     "optional": "true",
-    "value": "${tsd.storage.compaction.flush_interval:10}",
+    "category": "Compactions",
     "type": "Integer",
+    "value": "${tsd.storage.compaction.flush_interval:10}",
     "key": "tsd.storage.compaction.flush_interval"
   },
   {
-    "category": "Compactions",
     "description": "Minimum rows attempted to compact at once, default 100",
     "optional": "true",
-    "value": "${tsd.storage.compaction.min_flush_threshold:100}",
+    "category": "Compactions",
     "type": "Integer",
+    "value": "${tsd.storage.compaction.min_flush_threshold:100}",
     "key": "tsd.storage.compaction.min_flush_threshold"
   },
   {
-    "category": "Compactions",
     "description": "Maximum number of rows, compacted concirrently, default 10000",
     "optional": "true",
-    "value": "${tsd.storage.compaction.max_concurrent_flushes:10000}",
+    "category": "Compactions",
     "type": "Integer",
+    "value": "${tsd.storage.compaction.max_concurrent_flushes:10000}",
     "key": "tsd.storage.compaction.max_concurrent_flushes"
   },
   {
-    "category": "Compactions",
     "description": "Compaction flush speed multiplier, default 2",
     "optional": "true",
-    "value": "${tsd.storage.compaction.flush_speed:2}",
+    "category": "Compactions",
     "type": "Integer",
+    "value": "${tsd.storage.compaction.flush_speed:2}",
     "key": "tsd.storage.compaction.flush_speed"
   },
   {
-    "category": "Misc",
+    "meta": "RWMODE",
     "description": "Whether or not the TSD will allow writing data points. Must be either to allow writing data or to block data point writes. Note that meta data such as UIDs can still be written/modified.",
     "optional": "true",
-    "value": "${tsd.mode:rw}",
+    "category": "Misc",
     "type": "String",
+    "value": "${tsd.mode:rw}",
     "key": "tsd.mode"
   },
   {
-    "category": "Misc",
+    "meta": "BOOL",
     "description": "Enable or disable the HTML and ASCII commands to shutdown a TSD.",
     "optional": "true",
-    "value": "${tsd.no_diediedie:false}",
+    "category": "Misc",
     "type": "Boolean",
+    "value": "${tsd.no_diediedie:false}",
     "key": "tsd.no_diediedie"
   },
   {
-    "category": "Misc",
+    "meta": "BOOL",
     "description": "Whether or not the FQDN should be returned with statistics requests. The default stats are returned with which is not guaranteed to perform a lookup and return the FQDN. Setting this to true will perform a name lookup and return the FQDN if found, otherwise it may return the IP. The stats output should be",
     "optional": "true",
-    "value": "${tsd.stats.canonical:false}",
+    "category": "Misc",
     "type": "Boolean",
+    "value": "${tsd.stats.canonical:false}",
     "key": "tsd.stats.canonical"
   },
   {
-    "category": "Query",
     "description": "Whether or not to allow simultaneous duplicate queries from the same host. If disabled, a second query that comes in matching one already running will receive an exception.",
     "optional": "true",
-    "value": "${tsd.query.allow_simultaneous_duplicates:false}",
+    "category": "Query",
     "type": "Boolean",
+    "value": "${tsd.query.allow_simultaneous_duplicates:false}",
     "key": "tsd.query.allow_simultaneous_duplicates"
   },
   {
-    "category": "Query",
     "description": "The maximum number of tag values to include in the regular expression sent to storage during scanning for data. A larger value means more computation on the HBase region servers.",
     "optional": "true",
-    "value": "${tsd.query.filter.expansion_limit:4096}",
+    "category": "Query",
     "type": "Integer",
+    "value": "${tsd.query.filter.expansion_limit:4096}",
     "key": "tsd.query.filter.expansion_limit"
   },
   {
-    "category": "Query",
     "description": "Whether or not to continue querying when the query includes a tag value that hasn't been assigned a UID yet and may not exist.",
     "optional": "true",
-    "value": "${tsd.query.skip_unresolved_tagvs:false}",
+    "category": "Query",
     "type": "Boolean",
+    "value": "${tsd.query.skip_unresolved_tagvs:false}",
     "key": "tsd.query.skip_unresolved_tagvs"
   },
   {
-    "category": "Query",
     "description": "How long, in milliseconds, before canceling a running query. A value of 0 means queries will not timeout.",
     "optional": "true",
-    "value": "${tsd.query.timeout:0}",
+    "category": "Query",
     "type": "Integer",
+    "value": "${tsd.query.timeout:0}",
     "key": "tsd.query.timeout"
   },
   {
-    "category": "Plugins",
+    "meta": "LIST",
     "description": "A comma delimited list of RPC plugins to load when starting a TSD. Must contain the entire class name.",
     "optional": "true",
-    "value": "${tsd.rpc.plugins:}",
+    "category": "Plugins",
     "type": "String",
+    "value": "${tsd.rpc.plugins:}",
     "key": "tsd.rpc.plugins"
   },
   {
-    "category": "Plugins",
+    "meta": "BOOL",
     "description": "Whether or not to enable a real time publishing plugin. If true, you must supply a valid class name",
     "optional": "true",
-    "value": "${tsd.rtpublisher.enable:false}",
+    "category": "Plugins",
     "type": "Boolean",
+    "value": "${tsd.rtpublisher.enable:false}",
     "key": "tsd.rtpublisher.enable"
   },
   {
-    "category": "Plugins",
+    "meta": "CLASS",
     "description": "The class name of a real time publishing plugin to instantiate. If is set to false, this value is ignored. E.g. net.opentsdb.tsd.RabbitMQPublisher",
     "optional": "true",
-    "value": "${tsd.rtpublisher.plugin:}",
+    "category": "Plugins",
     "type": "String",
+    "value": "${tsd.rtpublisher.plugin:}",
     "key": "tsd.rtpublisher.plugin"
   },
   {
-    "category": "Plugins",
+    "meta": "BOOL",
     "description": "Whether or not to enable search functionality. If true, you must supply a valid class name",
     "optional": "true",
-    "value": "${tsd.search.enable:false}",
+    "category": "Plugins",
     "type": "Boolean",
+    "value": "${tsd.search.enable:false}",
     "key": "tsd.search.enable"
   },
   {
-    "category": "Plugins",
+    "meta": "CLASS",
     "description": "The class name of a search plugin to instantiate. If is set to false, this value is ignored. E.g. net.opentsdb.search.ElasticSearch",
     "optional": "true",
-    "value": "${tsd.search.plugin:}",
+    "category": "Plugins",
     "type": "String",
+    "value": "${tsd.search.plugin:}",
     "key": "tsd.search.plugin"
   }
 ]

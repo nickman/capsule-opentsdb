@@ -21,6 +21,10 @@ package net.opentsdb;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +32,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import net.opentsdb.tools.ArgP;
 import net.opentsdb.utils.Config;
 import net.opentsdb.utils.JSON;
 
@@ -50,6 +55,9 @@ public class ConfigReader {
 	/** The path to load the config json from */
 	public static String CONFIG_PATH = "config/opentsdb.json";
 	
+	/** The default flush interval */
+	private static final short DEFAULT_FLUSH_INTERVAL = 1000;
+	
 	/** Pattern matcher and resolver for configuration expressions */
 	public static Pattern EXPR_RESOLVER = Pattern.compile("\\$\\{(.*?)(?::(.*))?\\}$");
 	/** Expression operator and arg extractor */
@@ -71,29 +79,84 @@ public class ConfigReader {
 	
 	public static void main(String[] args) {
 		System.setProperty("capsule.cache.dir", "/tmp");
-		ConfigReader cr = load();
+		try {
+			final Config config = new Config(false);
+			String[] cmdLineArgs = load(config, new String[]{"--port", "3847"});
+			System.out.println("CMD Line Args:" + Arrays.toString(cmdLineArgs));
+			System.out.println("TSDB Config:" + config.dumpConfiguration());
+		} catch (Exception ex) {
+			ex.printStackTrace(System.err);
+			throw new RuntimeException(ex);
+		}
 	}
 	
-	public static ConfigReader load() {
-		final ConfigReader cr = new ConfigReader();
+	public static String[] load(final Config config, final String[] args) {
 		InputStream is = null;
+		String[] noConfigArgs = {};
 		try {
+			
 			is = ConfigReader.class.getClassLoader().getResourceAsStream(CONFIG_PATH);
 			ArrayNode an = (ArrayNode)JSON.getMapper().readTree(is);
+			final LinkedHashMap<String, ConfigurationItem> citems = new LinkedHashMap<String, ConfigurationItem>(an.size());
+			final HashMap<String, ConfigurationItem> clOptions = new HashMap<String, ConfigurationItem>();
 			for(int i = 0; i < an.size(); i++) {
 				JsonNode jn = an.get(i);
 				ConfigurationItem ci = JSON.getMapper().convertValue(jn, ConfigurationItem.class);
 				ci.resolve();
-				System.out.println(ci);
+				if(ci.getCl()!=null) {
+					clOptions.put(ci.getCl(), ci);
+				}
+				if(ci.getValue()!=null) {
+					//config.overrideConfig(ci.getKey(), ci.getValue().toString());
+					ci.validate();
+					citems.put(ci.getKey(), ci);
+				}
+				//System.out.println(ci.dump());
 			}
 			
-			
-			return cr;
+			final ArgP argp = newArgP();
+			noConfigArgs = argp.parse(args);
+			final Map<String, String> argpOptions = argp.getParsed();
+			if(!argpOptions.isEmpty()) {
+				for(Map.Entry<String, String> entry: argpOptions.entrySet()) {
+					ConfigurationItem argCi = clOptions.get(entry.getKey());
+					if(argCi!=null) {
+						argCi.setValueAsText(entry.getValue());
+						citems.put(argCi.getKey(), argCi);
+					}
+				}
+			}
+			// Write the configuration to an OpenTSDB config			
+			for(ConfigurationItem configItem: citems.values()) {
+				config.overrideConfig(configItem.getKey(), configItem.getValueStr());
+			}
+			return noConfigArgs;
 		} catch (Exception ex) {
 			throw new RuntimeException("Failed to load resource [" + CONFIG_PATH + "]", ex);
-		}
-		
+		}		
 	}
+	
+	private static ArgP newArgP() {
+		final ArgP argp = new ArgP();
+    argp.addOption("--port", "NUM", "TCP port to listen on.");
+    argp.addOption("--bind", "ADDR", "Address to bind to (default: 0.0.0.0).");
+    argp.addOption("--staticroot", "PATH",
+                   "Web root from which to serve static files (/s URLs).");
+    argp.addOption("--cachedir", "PATH",
+                   "Directory under which to cache result of requests.");
+    argp.addOption("--worker-threads", "NUM",
+                   "Number for async io workers (default: cpu * 2).");
+    argp.addOption("--async-io", "true|false",
+                   "Use async NIO (default true) or traditional blocking io");
+    argp.addOption("--backlog", "NUM",
+                   "Size of connection attempt queue (default: 3072 or kernel"
+                   + " somaxconn.");
+    argp.addOption("--flush-interval", "MSEC",
+                   "Maximum time for which a new data point can be buffered"
+                   + " (default: " + DEFAULT_FLUSH_INTERVAL + ").");		
+		return argp;
+	}
+	
 	
 	
 	
@@ -114,11 +177,17 @@ public class ConfigReader {
 		/** Indicates if the the configuration item is mandatory  */
 		@JsonProperty("optional")
 		boolean optional;
+		/** The config meta type */
+		ConfigMetaType metaType = ConfigMetaType.NULL;
 		/** The configuration item resolved value */		
 		Object value;
 		/** The configuration item key */
 		@JsonProperty("key")
-		String key;		
+		String key;
+		/** The command line option that maps to this item */
+		@JsonProperty("cl")
+		String cl;		
+		
 		/** The configuration item type */
 		Class<?> type;
 		
@@ -129,6 +198,18 @@ public class ConfigReader {
 		ConfigurationItem() {
 			
 		}
+		
+		/**
+		 * Updates the value of this item from the passed text
+		 * @param text The new value as text
+		 */
+		public void setValueAsText(final String text) {
+			if(text==null || text.trim().isEmpty()) throw new IllegalArgumentException("The value passed for item [" + key + "] was null or empty");
+			value = null;
+			tmpValue = text.trim();
+			resolve();
+		}
+					
 
 		/**
 		 * Returns the configuration item's category
@@ -136,6 +217,25 @@ public class ConfigReader {
 		 */
 		public String getCategory() {
 			return category;
+		}
+		
+		/**
+		 * Returns the command line arg name that maps to this item
+		 * @return the command line arg name that maps to this item
+		 */
+		public String getCl() {
+			return cl;
+		}
+		
+		@JsonProperty("meta")
+		void setMetaType(final String meta) {
+			if(meta!=null && !meta.trim().isEmpty()) {
+				try {
+					metaType = ConfigMetaType.byName(meta);
+				} catch (Exception ex) {
+					System.err.println("Unable to determine meta type from [" + meta + "]:" + ex);
+				}
+			}
 		}
 		
 		@JsonProperty("type")
@@ -254,7 +354,30 @@ public class ConfigReader {
 		public Object getValue() {
 			return value;
 		}
+		
+		/**
+		 * Returns the configuration value as a string
+		 * @return the configuration value as a string
+		 */
+		public String getValueStr() {
+			return value==null ? null : value.toString();
+		}
 
+		/**
+		 * Returns the meta type
+		 * @return the meta type
+		 */
+		public ConfigMetaType getMetaType() {
+			return metaType;
+		}
+		
+		/**
+		 * Self validates this item
+		 */
+		public void validate() {
+			this.metaType.validate(this);
+		}
+		
 		/**
 		 * Returns the configuration item's key
 		 * @return the key
@@ -279,6 +402,35 @@ public class ConfigReader {
 			builder.append("]");
 			return builder.toString();
 		}
+		
+		/**
+		 * Returns a formatted string displaying all the properties
+		 * @return a formatted string displaying all the properties
+		 */
+		public String dump() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("ConfigurationItem [\n\tkey=");
+			builder.append(key);
+			builder.append("\n\tvalue=");
+			builder.append(value);
+			builder.append("\n\ttype=");
+			builder.append(type.getName());
+			if(metaType!=null) {
+				builder.append("\n\tmeta=");
+				builder.append(metaType.name());
+			}
+			builder.append("\n\tdescription=");
+			builder.append(description);
+			builder.append("\n\toptional=");
+			builder.append(optional);
+			if(cl!=null) {
+				builder.append("\n\tcommandLine=");
+				builder.append(cl);
+			}
+			
+			builder.append("\n]");
+			return builder.toString();
+		}		
 
 		/**
 		 * {@inheritDoc}
