@@ -20,6 +20,27 @@
     "cl": "--bind"
   },
   {
+    "meta": "POSINT",
+    "description": "The TCP port JMXMP should use for communications",
+    "optional": "true",
+    "category": "Network",
+    "type": "Integer",
+    "value": "${jmxmp.network.port:4245}",
+    "key": "jmxmp.network.port",
+    "cl": "--jmx-port"
+  },
+  {
+    "meta": "ADDR",
+    "description": "The IPv4 network address the JMX server should bind to, defaults to all addresses",
+    "optional": "true",
+    "category": "Network",
+    "type": "String",
+    "value": "${jmxmp.network.bind:0.0.0.0}",
+    "key": "jmxmp.network.bind",
+    "cl": "--jmx-bind"
+  },
+  
+  {
     "meta": "BOOL",
     "description": "Enables Nagel's algorithm to reduce the number of packets sent over the network, default is True",
     "optional": "true",
@@ -578,5 +599,26 @@
     "type": "String",
     "value": "${tsd.search.plugin:}",
     "key": "tsd.search.plugin"
+  },
+  {
+    "meta": "FILE",
+    "description": "The file to write the process PID to. Defaults to [${user.home}.tsdb/opentsdb.pid]",
+    "optional": "true",
+    "category": "Process",
+    "type": "String",
+    "value": "${tsd.process.pid.file:${java.io.tmpdir}/.tsdb/opentsdb.pid}",
+    "key": "tsd.process.pid.file",
+    "cl": "--pid-file"      
+  },
+  {
+    "meta": "BOOL",
+    "description": "If true, ignores and overwrites an existing pid file on startup",
+    "optional": "true",
+    "category": "Process",
+    "type": "Boolean",
+    "value": "${tsd.process.pid.ignore.existing:true}",
+    "key": "tsd.process.pid.ignore.existing",
+    "cl": "--ignore-existing-pid"
   }
+      
 ]
